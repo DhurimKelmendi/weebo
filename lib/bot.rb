@@ -15,8 +15,10 @@ module Weebo
       scheduler(:cron, frequency: '0 0 * * *') do
         begin
           puts "#{Time.new.strftime("%m/%d/%Y")}"
-          db = Weebo::Database.new("lib/db.sqlite3")
-          run.job(process(db.load_data))
+          path = '/v1/timings/daily?timestamp=1495973193&hide_optional_fields=false'
+          service = 'dawa-tools'
+          api_data = ApiData.new(service, path)
+          run.job(process(api_data.get_data(:data)))
         rescue Rufus::Scheduler::TimeoutError => exception
           logger.error "Exception: #{exception.message}"
         end
@@ -42,11 +44,11 @@ module Weebo
     def format(perform, period)
       format_perform_txt =
           case perform
-            when "sabahu"   then "sabahut"
-            when "dreka"    then "drekës"
-            when "ikindia"  then "ikindisë"
-            when "akshami"  then "akshamit"
-            when "jacia"    then "jacisë"
+            when :fajr   then "sabahut"
+            when :dhuhr    then "drekës"
+            when :asr  then "ikindisë"
+            when :maghrib  then "akshamit"
+            when :isha    then "jacisë"
           end
       text = "Koha e namazit të #{format_perform_txt}".encode!('utf-8')
       time = "#{Time.now.strftime("%Y-%m-%d")} #{period}:00"
