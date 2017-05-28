@@ -66,10 +66,12 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   hipchat
+  httparty
+  json
   rufus-scheduler
   slack-notifier
   sqlite3
   twitter
 
 BUNDLED WITH
-   1.11.2
+   1.14.6
